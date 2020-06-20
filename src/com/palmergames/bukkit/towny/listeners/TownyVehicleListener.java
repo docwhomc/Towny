@@ -122,6 +122,26 @@ public class TownyVehicleListener implements Listener {
 		Vehicle vehicle = event.getVehicle();
 		Entity entity = event.getEntity();
 		List<Entity> passengers = vehicle.getPassengers();
+		Material material = null;
+
+		switch (entity.getType()) {
+
+			case ITEM_FRAME:
+				material = Material.ITEM_FRAME;
+				break;
+
+			case LEASH_HITCH:
+				material = Material.LEAD;
+				break;
+
+			case PAINTING:
+				material = Material.PAINTING;
+				break;
+
+			default:
+				break;
+
+		}
 
 		// Only run for hanging entities
 		if (entity instanceof Hanging) {
@@ -132,11 +152,7 @@ public class TownyVehicleListener implements Listener {
 				// Check if player
 				if (passenger instanceof Player) {
 					// Get build permissions (updates cache if none exist)
-					boolean bDestroy = PlayerCacheUtil.getCachePermission(
-						(Player) passenger,
-						location,
-						vehicle,  // Try material DIRT if this doesn't work
-						TownyPermission.ActionType.DESTROY);
+					boolean bDestroy = PlayerCacheUtil.getCachePermission((Player) passenger, location, material, TownyPermission.ActionType.DESTROY);
 					// Allow the removal if we are permitted
 					if (bDestroy) {
 						return;
