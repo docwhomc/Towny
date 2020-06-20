@@ -1,11 +1,16 @@
 package com.palmergames.bukkit.towny.listeners;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Hanging;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.vehicle.VehicleDestroyEvent;
+import org.bukkit.event.vehicle.VehicleEntityCollisionEvent;
 
 import com.palmergames.bukkit.towny.Towny;
 import com.palmergames.bukkit.towny.TownyMessaging;
@@ -102,6 +107,46 @@ public class TownyVehicleListener implements Listener {
 				if (cache.hasBlockErrMsg()) {
 					TownyMessaging.sendErrorMsg(player, cache.getBlockErrMsg());
 				}
+			}
+		}
+	}
+
+	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
+	public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
+
+		if (plugin.isError()) {
+			event.setCancelled(true);
+			return;
+		}
+
+		Vehicle vehicle = event.getVehicle();
+		Entity entity = event.getEntity();
+		List<Entity> passengers = vehicle.getPassengers();
+
+		// Only run for hanging entities
+		if (entity.isInstance(Hanging)) {
+			Location location = entity.getLocation();
+			// Only check first passenger's perms (if present)
+			if (passengers.size() >= 1) {
+				Entity passenger = passengers[0];
+				// Check if player
+				if (passenger.isInstanceof(Player)) {
+					// Get build permissions (updates cache if none exist)
+					boolean bDestroy = PlayerCacheUtil.getCachePermission(
+						(Player) passenger,
+						location,
+						vehicle,  // Try material DIRT if this doesn't work
+						TownyPermission.ActionType.DESTROY);
+					// Allow the removal if we are permitted
+					if (bDestroy) {
+						return;
+					// Cancel event otherwise
+					} else {
+						event.setCancelled(true);
+					}
+				}
+			} else {// Empty vehicle -> cancel event.
+				event.setCancelled(true);
 			}
 		}
 	}
