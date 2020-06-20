@@ -124,13 +124,13 @@ public class TownyVehicleListener implements Listener {
 		List<Entity> passengers = vehicle.getPassengers();
 
 		// Only run for hanging entities
-		if (entity.isInstance(Hanging)) {
+		if (entity instanceof Hanging) {
 			Location location = entity.getLocation();
 			// Only check first passenger's perms (if present)
 			if (passengers.size() >= 1) {
 				Entity passenger = passengers[0];
 				// Check if player
-				if (passenger.isInstanceof(Player)) {
+				if (passenger instanceof Player) {
 					// Get build permissions (updates cache if none exist)
 					boolean bDestroy = PlayerCacheUtil.getCachePermission(
 						(Player) passenger,
