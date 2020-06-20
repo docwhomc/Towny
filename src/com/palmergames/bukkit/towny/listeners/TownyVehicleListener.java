@@ -150,7 +150,7 @@ public class TownyVehicleListener implements Listener {
 			Location location = entity.getLocation();
 			// Only check first passenger's perms (if present)
 			if (passengers.size() >= 1) {
-				Entity passenger = passengers[0];
+				Entity passenger = passengers.get(0);
 				// Check if player
 				if (passenger instanceof Player) {
 					// Get build permissions (updates cache if none exist)
