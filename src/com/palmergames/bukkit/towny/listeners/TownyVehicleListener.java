@@ -116,6 +116,8 @@ public class TownyVehicleListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
 
+		System.out.println("onVehicleEntityCollision");
+
 		if (plugin.isError()) {
 			event.setCancelled(true);
 			return;
@@ -144,11 +146,14 @@ public class TownyVehicleListener implements Listener {
 				break;
 
 		}
+		System.out.printf("material = %s", material);
 
 		// Only run for hanging entities
 		if (entity instanceof Hanging) {
 			Location location = entity.getLocation();
+			System.out.printf("location(%s, %d, %d, %d)", location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
 			// Only check first passenger's perms (if present)
+			System.out.printf("passngers.size() = %d", passengers.size());
 			if (passengers.size() >= 1) {
 				Entity passenger = passengers.get(0);
 				// Check if player
@@ -157,15 +162,19 @@ public class TownyVehicleListener implements Listener {
 					boolean bDestroy = PlayerCacheUtil.getCachePermission((Player) passenger, location, material, TownyPermission.ActionType.DESTROY);
 					// Allow the removal if we are permitted
 					if (bDestroy) {
+						System.out.println("don't cancel");
 						return;
 					// Cancel event otherwise
 					} else {
+						System.out.println("cancel");
 						event.setCancelled(true);
 					}
 				}
 			} else {// Empty vehicle -> cancel event.
+				System.out.println("cancel");
 				event.setCancelled(true);
 			}
 		}
+		System.out.println("end");
 	}
 }
