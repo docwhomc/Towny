@@ -125,6 +125,8 @@ public class TownyVehicleListener implements Listener {
 
 		Vehicle vehicle = event.getVehicle();
 		Entity entity = event.getEntity();
+		System.out.printf("entity : %s", entity);
+		System.out.printf("entity.getEntityId() : %s", entity.getEntityId());
 		List<Entity> passengers = vehicle.getPassengers();
 		Material material = null;
 
@@ -146,12 +148,13 @@ public class TownyVehicleListener implements Listener {
 				break;
 
 		}
-		System.out.printf("material = %s", material);
+		System.out.printf("material : %s", material.getKey());
 
 		// Only run for hanging entities
+		System.out.printf("entity instanceof Hanging : %s", entity instanceof Hanging);
 		if (entity instanceof Hanging) {
 			Location location = entity.getLocation();
-			System.out.printf("location(%s, %d, %d, %d)", location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
+			System.out.printf("location : Location(%s, %d, %d, %d)", location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
 			// Only check first passenger's perms (if present)
 			System.out.printf("passngers.size() = %d", passengers.size());
 			if (passengers.size() >= 1) {
