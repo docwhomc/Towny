@@ -116,7 +116,7 @@ public class TownyVehicleListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
 	public void onVehicleEntityCollision(VehicleEntityCollisionEvent event) {
 
-		System.out.println("onVehicleEntityCollision");
+		System.out.println("public void onVehicleEntityCollision(" + event + ")");
 
 		if (plugin.isError()) {
 			event.setCancelled(true);
@@ -125,38 +125,48 @@ public class TownyVehicleListener implements Listener {
 
 		Vehicle vehicle = event.getVehicle();
 		Entity entity = event.getEntity();
-		System.out.printf("entity : %s", entity);
-		System.out.printf("entity.getEntityId() : %s", entity.getEntityId());
+		System.out.println("entity = " + entity);
+		System.out.println("entity.getEntityId() = " + entity.getEntityId());
 		List<Entity> passengers = vehicle.getPassengers();
 		Material material = null;
 
+		System.out.println(" switch (entity.getType() = " + entity.getType() + ")");
 		switch (entity.getType()) {
 
 			case ITEM_FRAME:
+				System.out.println("case ITEM_FRAME:");
 				material = Material.ITEM_FRAME;
 				break;
 
 			case LEASH_HITCH:
+				System.out.println("case LEASH_HITCH:");
 				material = Material.LEAD;
 				break;
 
 			case PAINTING:
+				System.out.println("case PAINTING:");
 				material = Material.PAINTING;
 				break;
 
 			default:
+				System.out.println("default:");
 				break;
 
 		}
-		System.out.printf("material : %s", material.getKey());
+		System.out.println("material = " + material);
+		System.out.println("material.getKey() = " + material.getKey());
 
 		// Only run for hanging entities
-		System.out.printf("entity instanceof Hanging : %s", entity instanceof Hanging);
+		System.out.println("(entity instanceof Hanging) = " + (entity instanceof Hanging));
 		if (entity instanceof Hanging) {
 			Location location = entity.getLocation();
-			System.out.printf("location : Location(%s, %d, %d, %d)", location.getWorld().getName(), location.getX(), location.getY(), location.getZ());
+			System.out.println("location = " + location);
+			System.out.println("location.getWorld().getName() = " + location.getWorld().getName());
+			System.out.println("location.getX() = " + location.getX());
+			System.out.println("location.getY() = " + location.getY());
+			System.out.println("location.getZ() = " + location.getZ());
 			// Only check first passenger's perms (if present)
-			System.out.printf("passngers.size() = %d", passengers.size());
+			System.out.println("passngers.size() = " + passengers.size());
 			if (passengers.size() >= 1) {
 				Entity passenger = passengers.get(0);
 				// Check if player
