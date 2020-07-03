@@ -476,6 +476,18 @@ public class Nation extends TownyObject implements ResidentList, TownyInviter, B
 	 * distances to a new nation capital/moved nation capital homeblock are
 	 * rechecked.
 	 *
+	 * @throws TownyException - Generic TownyException
+	 * @return townsToRemove - A list of Towns that recheckTownDistance() will remove.
+	 */
+	public List<Town> getRecheckTownDistanceList() throws TownyException {
+		return getRecheckTownDistanceList(towns);
+	}
+
+	/**
+	 * A method for getting a list of towns that would be removed if town
+	 * distances to a new nation capital/moved nation capital homeblock are
+	 * rechecked.
+	 *
 	 * @param towns - The list of towns to check.
 	 * @throws TownyException - Generic TownyException
 	 * @return townsToRemove - A list of Towns that recheckTownDistance() will remove.
