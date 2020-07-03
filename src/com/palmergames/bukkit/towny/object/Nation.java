@@ -435,27 +435,14 @@ public class Nation extends TownyObject implements ResidentList, TownyInviter, B
 	 * @throws TownyException - Generic TownyException
 	 */
 	public void recheckTownDistance() throws TownyException {
-		if(capital != null) {
-			if (TownySettings.getNationRequiresProximity() > 0) {
-				final Coord capitalCoord = capital.getHomeBlock().getCoord();
-				Iterator<Town> it = towns.iterator();
-				while(it.hasNext()) {
-					Town town = it.next();
-					Coord townCoord = town.getHomeBlock().getCoord();
-					if (!capital.getHomeBlock().getWorld().getName().equals(town.getHomeBlock().getWorld().getName())) {
-						it.remove();
-						continue;
-					}
+		Iterator<Town> it = getRecheckTownDistanceList().iterator();
+		while(it.hasNext()) {
+			Town town = it.next();
 
-					final double distance = Math.sqrt(Math.pow(capitalCoord.getX() - townCoord.getX(), 2) + Math.pow(capitalCoord.getZ() - townCoord.getZ(), 2));
-					if (distance > TownySettings.getNationRequiresProximity()) {
-						TownyMessaging.sendPrefixedTownMessage(town, String.format(TownySettings.getLangString("msg_town_left_nation"), this.getName()));
-						TownyMessaging.sendPrefixedNationMessage(this, String.format(TownySettings.getLangString("msg_nation_town_left"), town.getName()));
-						this.remove(town);
-						it.remove();
-					}
-				}
-			}
+			TownyMessaging.sendPrefixedTownMessage(town, String.format(TownySettings.getLangString("msg_town_left_nation"), this.getName()));
+			TownyMessaging.sendPrefixedNationMessage(this, String.format(TownySettings.getLangString("msg_nation_town_left"), town.getName()));
+			this.remove(town);
+			it.remove();
 		}
 	}
 	
