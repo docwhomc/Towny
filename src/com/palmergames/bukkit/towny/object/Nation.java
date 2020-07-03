@@ -462,6 +462,17 @@ public class Nation extends TownyObject implements ResidentList, TownyInviter, B
 	/**
 	 * A dry-run method for rechecking town distances to a new nation capital/
 	 * moved nation capital homeblock.
+	 *
+	 * @throws TownyException - Generic TownyException
+	 * @return removedTowns - A list of Towns which would be removed under a real recheckTownDistance().
+	 */
+	public List<Town> recheckTownDistanceDryRun() throws TownyException {
+		return getRecheckTownDistanceList();
+	}
+
+	/**
+	 * A dry-run method for rechecking town distances to a new nation capital/
+	 * moved nation capital homeblock.
 	 * 
 	 * @param towns - The list of towns to check.
 	 * @throws TownyException - Generic TownyException
