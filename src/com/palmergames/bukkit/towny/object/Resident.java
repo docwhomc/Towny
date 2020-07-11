@@ -18,6 +18,7 @@ import com.palmergames.bukkit.towny.invites.exceptions.TooManyInvitesException;
 import com.palmergames.bukkit.towny.object.metadata.CustomDataField;
 import com.palmergames.bukkit.towny.permissions.TownyPerms;
 import com.palmergames.bukkit.towny.tasks.SetDefaultModes;
+import com.palmergames.bukkit.towny.utils.NameUtil;
 import com.palmergames.bukkit.util.BukkitTools;
 import com.palmergames.util.StringMgmt;
 import org.bukkit.Location;
@@ -27,10 +28,12 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class Resident extends TownyObject implements TownyInviteReceiver, EconomyHandler, TownBlockOwner {
 	private List<Resident> friends = new ArrayList<>();
 	// private List<Object[][][]> regenUndo = new ArrayList<>(); // Feature is disabled as of MC 1.13, maybe it'll come back.
+	private UUID uuid = null;
 	private Town town = null;
 	private long lastOnline;
 	private long registered;
@@ -77,6 +80,18 @@ public class Resident extends TownyObject implements TownyInviteReceiver, Econom
 	public boolean isNPC() {
 
 		return isNPC;
+	}
+	
+	public UUID getUUID() {
+		return uuid;		
+	}
+	
+	public void setUUID(UUID uuid) {
+		this.uuid = uuid;
+	}
+	
+	public boolean hasUUID() {
+		return this.uuid != null;
 	}
 
 	public void setJailed(boolean isJailed) {
@@ -135,6 +150,8 @@ public class Resident extends TownyObject implements TownyInviteReceiver, Econom
 
 				sendToJail(player, index, town);
 				if (days > 0) {
+					if (days > 10000)
+						days = 10000;
 					this.setJailDays(days);
 					TownyMessaging.sendMsg(player, String.format(TownySettings.getLangString("msg_you've_been_jailed_for_x_days"), days));
 				}
@@ -733,14 +750,14 @@ public class Resident extends TownyObject implements TownyInviteReceiver, Econom
 	@Override
 	public String getFormattedName() {
 		if (isKing()) {
-			return (hasTitle() ? getTitle() + " " : TownySettings.getKingPrefix(this)) + getName() + (hasSurname() ? " " + getSurname() : TownySettings.getKingPostfix(this));
+			return NameUtil.translateColorCodes(hasTitle() ? getTitle() + " " : TownySettings.getKingPrefix(this)) + getName() + (hasSurname() ? " " + getSurname() : TownySettings.getKingPostfix(this));
 		}
 			
 		if (isMayor()) {
-			return (hasTitle() ? getTitle() + " " : TownySettings.getMayorPrefix(this)) + getName() + (hasSurname() ? " " + getSurname() : TownySettings.getMayorPostfix(this));
+			return NameUtil.translateColorCodes(hasTitle() ? getTitle() + " " : TownySettings.getMayorPrefix(this)) + getName() + (hasSurname() ? " " + getSurname() : TownySettings.getMayorPostfix(this));
 		}
 			
-		return (hasTitle() ? getTitle() + " " : "") + getName() + (hasSurname() ? " " + getSurname() : "");
+		return NameUtil.translateColorCodes(hasTitle() ? getTitle() + " " : "") + getName() + (hasSurname() ? " " + getSurname() : "");
 	}
 
 	/**

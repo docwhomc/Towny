@@ -107,7 +107,9 @@ public final class TownySQLSource extends TownyDatabaseHandler {
         if (this.type.equals("h2")) {
         
             driver1 = "org.h2.Driver";
-            this.dsn = ("jdbc:h2:" + dataFolderPath + File.separator + db_name + ".h2db;AUTO_RECONNECT=TRUE");
+            // H2 requires an absolute path
+            String dataFolderAbsolute = Towny.getPlugin().getDataFolder().getAbsolutePath() + File.separator + "data";
+            this.dsn = ("jdbc:h2:" + dataFolderAbsolute + File.separator + db_name + ".h2db;AUTO_RECONNECT=TRUE");
             username = "sa";
             password = "sa";
         
@@ -683,6 +685,14 @@ public final class TownySQLSource extends TownyDatabaseHandler {
             String search;
 
             while (rs.next()) {
+            	
+            	try {
+            		if (rs.getString("uuid") != null && !rs.getString("uuid").isEmpty())
+            			resident.setUUID(UUID.fromString(rs.getString("uuid")));
+            	} catch (Exception e) {
+                    e.printStackTrace();
+                }
+            	
                 try {
                     resident.setLastOnline(rs.getLong("lastOnline"));
                 } catch (Exception e) {
@@ -1555,6 +1565,7 @@ public final class TownySQLSource extends TownyDatabaseHandler {
         try {
             HashMap<String, Object> res_hm = new HashMap<>();
             res_hm.put("name", resident.getName());
+            res_hm.put("uuid", resident.hasUUID() ? resident.getUUID().toString() : "");
             res_hm.put("lastOnline", resident.getLastOnline());
             res_hm.put("registered", resident.getRegistered());
             res_hm.put("isNPC", resident.isNPC());
