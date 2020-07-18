@@ -614,21 +614,22 @@ public class Town extends Government implements TownBlockOwner {
 	private void remove(Resident resident) {
 		// Mayoral succession.
 		if (isMayor(resident)) {
-			if (residents.size() > 1) {
-				for (String rank : TownySettings.getOrderOfMayoralSuccession()) {
-					if (findNewMayor(rank)) {
-						break;
-					}
-				}
-				if (isMayor(resident)) {
-					// Still mayor and no one with a rank in the order of mayoral succession
-					// (`TownySettings.getOrderOfMayoralSuccession()`) so pick a resident to be mayor.
-					findNewMayor();
-				}
-				
-				// Town is not removing its last resident so be sure to save it.
-				TownyUniverse.getInstance().getDataSource().saveTown(this);
-			}
+		    LinkedHashSet<Resident> mayoralSuccession
+		        = this.getMayoralSuccession();
+		    for (Resident newMayor : mayoralSuccession) {
+		        // Try to update mayor.
+		        try {
+		            this.setMayor(newMayor);
+		        } catch (TownyException e) {
+                    // Error updating mayor.
+                    e.printStackTrace();
+                }
+		        // Break loop if mayor was successfully updated.
+		        if (!this.isMayor(resident))
+                    break;
+		    }
+			// Town is not removing its last resident so be sure to save it.
+			TownyUniverse.getInstance().getDataSource().saveTown(this);
 		}
 		// Remove resident.
 		residents.remove(resident);
@@ -675,6 +676,8 @@ public class Town extends Government implements TownBlockOwner {
 	 *
 	 * @param rank - the rank being checked for potential mayors
 	 * @return found - whether or not a new mayor was found
+	 * @deprecated Since 0.96.2.6, functionality has been incorporated into
+	 *     {@link Town#mayoralSuccession()}.
 	 */
 	private boolean findNewMayor(String rank) {
 		boolean found = false;
@@ -698,6 +701,8 @@ public class Town extends Government implements TownBlockOwner {
 	 * Tries to find a new mayor from among the town's residents.
 	 * 
 	 * @return found - whether or not a new mayor was found
+     * @deprecated Since 0.96.2.6, functionality has been incorporated into
+     *     {@link Town#mayoralSuccession()}.
 	 */
 	private boolean findNewMayor() {
 		boolean found = false;
