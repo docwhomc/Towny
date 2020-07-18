@@ -614,25 +614,37 @@ public class Town extends Government implements TownBlockOwner {
 	private void remove(Resident resident) {
 		// Mayoral succession.
 		if (isMayor(resident)) {
-		    LinkedHashSet<Resident> mayoralSuccession
-		        = this.getMayoralSuccession();
-		    for (Resident newMayor : mayoralSuccession) {
-		        // Try to update mayor.
-		        try {
-		            this.setMayor(newMayor);
-		        } catch (TownyException e) {
-                    // Error updating mayor.
-                    e.printStackTrace();
-                }
-		        // Break loop if mayor was successfully updated.
-		        if (!this.isMayor(resident))
-                    break;
-		    }
-			// Town is not removing its last resident so be sure to save it.
-			TownyUniverse.getInstance().getDataSource().saveTown(this);
+		    this.mayoralSuccession();
 		}
 		// Remove resident.
 		residents.remove(resident);
+	}
+
+	/**
+	 * Appoint a new mayor according to the order of mayoral succession.
+	 *
+	 * @return the new mayor
+	 * @see Town#getMayoralSuccession()
+	 */
+	private Resident mayoralSuccession() {
+	    Resident outgoingMayor = this.getMayor();
+        LinkedHashSet<Resident> mayoralSuccession = this.getMayoralSuccession();
+        for (Resident resident : mayoralSuccession) {
+            // Try to update mayor.
+            try {
+                this.setMayor(resident);
+            } catch (TownyException e) {
+                // Error updating mayor.
+                e.printStackTrace();
+            }
+            // Break loop if mayor was successfully updated.
+            if (!this.isMayor(outgoingMayor))
+                break;
+        }
+        // Town is not removing its last resident so be sure to save it.
+        TownyUniverse.getInstance().getDataSource().saveTown(this);
+        // Return the new mayor.
+        return this.getMayor();
 	}
 
 	/**
