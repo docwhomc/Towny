@@ -169,11 +169,10 @@ public class Town extends Government implements TownBlockOwner {
 
 	@Deprecated
 	public List<Resident> getAssistants() {
-
-	    return getRank("assistant");
+	    return getResidentsWithRank("assistant");
 	}
 
-	public List<Resident> getRank(String rank) {
+	public List<Resident> getResidentsWithRank(String rank) {
 
 		List<Resident> residentsWithRank = new ArrayList<>();
 		
@@ -620,7 +619,7 @@ public class Town extends Government implements TownBlockOwner {
 	 */
 	private boolean findNewMayor(String rank) {
 		boolean found = false;
-		for (Resident newMayor : getRank(rank)) {
+		for (Resident newMayor : getResidentsWithRank(rank)) {
 			if ((newMayor != mayor) && (newMayor.hasTownRank(rank))) {  // The latter portion seems redundant.
 				try {
 					setMayor(newMayor);
