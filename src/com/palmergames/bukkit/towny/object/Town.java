@@ -606,6 +606,11 @@ public class Town extends Government implements TownBlockOwner {
 		}
 	}
 
+	/**
+	 * Removes a resident from the town.
+	 *
+	 * @param resident - resident to remove
+	 */
 	private void remove(Resident resident) {
 		// Mayoral succession.
 		if (isMayor(resident)) {
