@@ -196,6 +196,18 @@ public class Town extends Government implements TownBlockOwner {
 		return Collections.unmodifiableList(residentsWithRank);
 	}
 
+    /**
+     * Gets a list of residents of the town with a specified rank.
+     *
+     * @param rank the name of a town rank
+     * @return a list of residents with that rank
+     * @deprecated Since 0.96.2.6, use {@link Town#getResidentsWithRank(String)}
+     *     instead.
+     */
+    public List<Resident> getRank(String rank) {
+        return getResidentsWithRank(rank);
+    }
+
 	@Override
 	public boolean hasResident(String name) {
 
@@ -221,6 +233,10 @@ public class Town extends Government implements TownBlockOwner {
 	public boolean hasAssistant(Resident resident) {
 
 		return resident.hasTownRank("assistant");
+	}
+	
+	public boolean hasResidentWithRank(Resident resident, String rank) {
+		return hasResident(resident) && resident.hasTownRank(rank);
 	}
 
 	void addResident(Resident resident) throws AlreadyRegisteredException {
