@@ -172,6 +172,12 @@ public class Town extends Government implements TownBlockOwner {
 	    return getResidentsWithRank("assistant");
 	}
 
+	/**
+	 * Gets a list of residents of the town with a specified rank.
+	 *
+	 * @param rank the name of a town rank
+	 * @return a list of residents with that rank
+	 */
 	public List<Resident> getResidentsWithRank(String rank) {
 
 		List<Resident> residentsWithRank = new ArrayList<>();
