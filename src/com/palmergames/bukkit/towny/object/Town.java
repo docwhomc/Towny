@@ -188,7 +188,7 @@ public class Town extends Government implements TownBlockOwner {
 
 		List<Resident> residentsWithRank = new ArrayList<>();
 		
-		for (Resident resident: residents) {
+		for (Resident resident: getResidents()) {
 			if (resident.hasTownRank(rank))
 				residentsWithRank.add(resident);
 		}
