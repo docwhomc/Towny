@@ -629,8 +629,9 @@ public class Town extends Government implements TownBlockOwner {
 	}
 
 	/**
-	 * Tries to find a new mayor from among the town's residents with the rank specified.
-	 * 
+	 * Tries to find a new mayor from among the town's residents with the rank
+	 * specified.
+	 *
 	 * @param rank - the rank being checked for potential mayors
 	 * @return found - whether or not a new mayor was found
 	 */
