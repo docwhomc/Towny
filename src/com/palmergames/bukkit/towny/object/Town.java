@@ -23,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -626,6 +627,41 @@ public class Town extends Government implements TownBlockOwner {
 		}
 		// Remove resident.
 		residents.remove(resident);
+	}
+
+	/**
+	 * Gets the town's order of mayoral succession, which is ordered by rank in
+	 * the order of mayoral succession setting ({@link TownySettings#
+	 * getOrderOfMayoralSuccession()}) and then by order in the town's residents
+	 * list.  Residents that do not have at least one of the aforementioned
+	 * ranks are included after all residents with at least one of those ranks.
+	 * All residents except for the current mayor are included.
+	 *
+	 * @return the town's order of mayoral succession
+	 */
+	LinkedHashSet<Resident> getMayoralSuccession() {
+	    // Use a LinkedHashSet to prevent duplicates and preserve order.
+	    LinkedHashSet<Resident> mayoralSuccession = new LinkedHashSet<>();
+	    // For each rank in the order of mayoral succession...
+        for (String rank : TownySettings.getOrderOfMayoralSuccession()) {
+            // For each resident with the rank...
+            for (Resident resident : getResidentsWithRank(rank)) {
+                // Add the resident to the mayoral succession LinkedHashSet
+                // unless already present.  No explicit check is performed here
+                // because it is handled by LinkedHashSet#add(Object).
+                mayoralSuccession.add(resident);
+            }
+        }
+        // Make sure all other residents are included in the order of mayoral
+        // succession by looping over and adding each resident that is not
+        // already in the order of mayoral succession.
+        for (Resident resident : getResidents()) {
+            mayoralSuccession.add(resident);
+        }
+        // Remove the current mayor.
+        mayoralSuccession.remove(this.mayor);
+        // Return the mayoral succession LinkedHashSet.
+	    return mayoralSuccession;
 	}
 
 	/**
